@@ -3,6 +3,8 @@
 # namespace: flatbuf
 
 import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
 
 # Same as Binary, but with 64-bit offsets, allowing to represent
 # extremely large data values.

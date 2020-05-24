@@ -3,6 +3,8 @@
 # namespace: flatbuf
 
 import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
 
 # Time elapsed from the Unix epoch, 00:00:00.000 on 1 January 1970, excluding
 # leap seconds, as a 64-bit integer. Note that UNIX time does not include

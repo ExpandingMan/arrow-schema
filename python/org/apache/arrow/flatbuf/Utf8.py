@@ -3,6 +3,8 @@
 # namespace: flatbuf
 
 import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
 
 # Unicode with UTF-8 encoding
 class Utf8(object):

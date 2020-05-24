@@ -3,6 +3,8 @@
 # namespace: flatbuf
 
 import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
 
 # ----------------------------------------------------------------------
 # A field represents a named column in a record / row batch or child of a
@@ -61,7 +63,7 @@ class Field(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
         if o != 0:
             x = self._tab.Indirect(o + self._tab.Pos)
-            from .DictionaryEncoding import DictionaryEncoding
+            from org.apache.arrow.flatbuf.DictionaryEncoding import DictionaryEncoding
             obj = DictionaryEncoding()
             obj.Init(self._tab.Bytes, x)
             return obj
@@ -76,7 +78,7 @@ class Field(object):
             x = self._tab.Vector(o)
             x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
             x = self._tab.Indirect(x)
-            from .Field import Field
+            from org.apache.arrow.flatbuf.Field import Field
             obj = Field()
             obj.Init(self._tab.Bytes, x)
             return obj
@@ -89,6 +91,11 @@ class Field(object):
             return self._tab.VectorLen(o)
         return 0
 
+    # Field
+    def ChildrenIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        return o == 0
+
     # User-defined metadata
     # Field
     def CustomMetadata(self, j):
@@ -97,7 +104,7 @@ class Field(object):
             x = self._tab.Vector(o)
             x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
             x = self._tab.Indirect(x)
-            from .KeyValue import KeyValue
+            from org.apache.arrow.flatbuf.KeyValue import KeyValue
             obj = KeyValue()
             obj.Init(self._tab.Bytes, x)
             return obj
@@ -109,6 +116,11 @@ class Field(object):
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
+
+    # Field
+    def CustomMetadataIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        return o == 0
 
 def FieldStart(builder): builder.StartObject(7)
 def FieldAddName(builder, name): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(name), 0)

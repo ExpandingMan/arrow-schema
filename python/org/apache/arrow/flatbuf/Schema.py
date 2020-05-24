@@ -3,6 +3,8 @@
 # namespace: flatbuf
 
 import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
 
 # ----------------------------------------------------------------------
 # A Schema describes the columns in a row batch
@@ -37,7 +39,7 @@ class Schema(object):
             x = self._tab.Vector(o)
             x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
             x = self._tab.Indirect(x)
-            from .Field import Field
+            from org.apache.arrow.flatbuf.Field import Field
             obj = Field()
             obj.Init(self._tab.Bytes, x)
             return obj
@@ -51,13 +53,18 @@ class Schema(object):
         return 0
 
     # Schema
+    def FieldsIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        return o == 0
+
+    # Schema
     def CustomMetadata(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         if o != 0:
             x = self._tab.Vector(o)
             x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
             x = self._tab.Indirect(x)
-            from .KeyValue import KeyValue
+            from org.apache.arrow.flatbuf.KeyValue import KeyValue
             obj = KeyValue()
             obj.Init(self._tab.Bytes, x)
             return obj
@@ -69,6 +76,11 @@ class Schema(object):
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
+
+    # Schema
+    def CustomMetadataIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        return o == 0
 
 def SchemaStart(builder): builder.StartObject(3)
 def SchemaAddEndianness(builder, endianness): builder.PrependInt16Slot(0, endianness, 0)

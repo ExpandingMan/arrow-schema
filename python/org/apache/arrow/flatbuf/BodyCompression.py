@@ -3,6 +3,8 @@
 # namespace: flatbuf
 
 import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
 
 # Optional compression for the memory buffers constituting IPC message
 # bodies. Intended for use with RecordBatch but could be used for other

@@ -3,6 +3,8 @@
 # namespace: flatbuf
 
 import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
 
 # Time type. The physical storage type depends on the unit
 # - SECOND and MILLISECOND: 32 bits

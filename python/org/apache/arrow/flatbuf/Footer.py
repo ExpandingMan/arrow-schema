@@ -3,6 +3,8 @@
 # namespace: flatbuf
 
 import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
 
 # ----------------------------------------------------------------------
 # Arrow File metadata
@@ -33,7 +35,7 @@ class Footer(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
         if o != 0:
             x = self._tab.Indirect(o + self._tab.Pos)
-            from .Schema import Schema
+            from org.apache.arrow.flatbuf.Schema import Schema
             obj = Schema()
             obj.Init(self._tab.Bytes, x)
             return obj
@@ -45,7 +47,7 @@ class Footer(object):
         if o != 0:
             x = self._tab.Vector(o)
             x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 24
-            from .Block import Block
+            from org.apache.arrow.flatbuf.Block import Block
             obj = Block()
             obj.Init(self._tab.Bytes, x)
             return obj
@@ -59,12 +61,17 @@ class Footer(object):
         return 0
 
     # Footer
+    def DictionariesIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        return o == 0
+
+    # Footer
     def RecordBatches(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
         if o != 0:
             x = self._tab.Vector(o)
             x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 24
-            from .Block import Block
+            from org.apache.arrow.flatbuf.Block import Block
             obj = Block()
             obj.Init(self._tab.Bytes, x)
             return obj
@@ -77,6 +84,11 @@ class Footer(object):
             return self._tab.VectorLen(o)
         return 0
 
+    # Footer
+    def RecordBatchesIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        return o == 0
+
     # User-defined metadata
     # Footer
     def CustomMetadata(self, j):
@@ -85,7 +97,7 @@ class Footer(object):
             x = self._tab.Vector(o)
             x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
             x = self._tab.Indirect(x)
-            from .KeyValue import KeyValue
+            from org.apache.arrow.flatbuf.KeyValue import KeyValue
             obj = KeyValue()
             obj.Init(self._tab.Bytes, x)
             return obj
@@ -97,6 +109,11 @@ class Footer(object):
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
+
+    # Footer
+    def CustomMetadataIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        return o == 0
 
 def FooterStart(builder): builder.StartObject(5)
 def FooterAddVersion(builder, version): builder.PrependInt16Slot(0, version, 0)

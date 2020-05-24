@@ -3,6 +3,8 @@
 # namespace: flatbuf
 
 import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
 
 # A Struct_ in the flatbuffer metadata is the same as an Arrow Struct
 # (according to the physical memory layout). We used Struct_ here as

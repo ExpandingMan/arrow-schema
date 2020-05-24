@@ -3,6 +3,8 @@
 # namespace: flatbuf
 
 import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
 
 # ----------------------------------------------------------------------
 # user defined key value pairs to add custom metadata to arrow

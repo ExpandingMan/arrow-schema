@@ -3,6 +3,8 @@
 # namespace: flatbuf
 
 import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
 
 class SparseTensor(object):
     __slots__ = ['_tab']
@@ -46,7 +48,7 @@ class SparseTensor(object):
             x = self._tab.Vector(o)
             x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
             x = self._tab.Indirect(x)
-            from .TensorDim import TensorDim
+            from org.apache.arrow.flatbuf.TensorDim import TensorDim
             obj = TensorDim()
             obj.Init(self._tab.Bytes, x)
             return obj
@@ -58,6 +60,11 @@ class SparseTensor(object):
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
+
+    # SparseTensor
+    def ShapeIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        return o == 0
 
     # The number of non-zero values in a sparse tensor.
     # SparseTensor
@@ -91,7 +98,7 @@ class SparseTensor(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
         if o != 0:
             x = o + self._tab.Pos
-            from .Buffer import Buffer
+            from org.apache.arrow.flatbuf.Buffer import Buffer
             obj = Buffer()
             obj.Init(self._tab.Bytes, x)
             return obj

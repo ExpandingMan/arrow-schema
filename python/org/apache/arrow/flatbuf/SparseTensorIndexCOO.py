@@ -3,6 +3,8 @@
 # namespace: flatbuf
 
 import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
 
 # ----------------------------------------------------------------------
 # EXPERIMENTAL: Data structures for sparse tensors
@@ -54,7 +56,7 @@ class SparseTensorIndexCOO(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
         if o != 0:
             x = self._tab.Indirect(o + self._tab.Pos)
-            from .Int import Int
+            from org.apache.arrow.flatbuf.Int import Int
             obj = Int()
             obj.Init(self._tab.Bytes, x)
             return obj
@@ -84,13 +86,18 @@ class SparseTensorIndexCOO(object):
             return self._tab.VectorLen(o)
         return 0
 
+    # SparseTensorIndexCOO
+    def IndicesStridesIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        return o == 0
+
     # The location and size of the indices matrix's data
     # SparseTensorIndexCOO
     def IndicesBuffer(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         if o != 0:
             x = o + self._tab.Pos
-            from .Buffer import Buffer
+            from org.apache.arrow.flatbuf.Buffer import Buffer
             obj = Buffer()
             obj.Init(self._tab.Bytes, x)
             return obj

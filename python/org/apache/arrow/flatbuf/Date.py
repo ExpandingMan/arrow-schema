@@ -3,6 +3,8 @@
 # namespace: flatbuf
 
 import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
 
 # Date is either a 32-bit or 64-bit type representing elapsed time since UNIX
 # epoch (1970-01-01), stored in either of two units:

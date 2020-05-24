@@ -3,6 +3,8 @@
 # namespace: flatbuf
 
 import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
 
 # Compressed Sparse Fiber (CSF) sparse tensor index.
 class SparseTensorIndexCSF(object):
@@ -54,7 +56,7 @@ class SparseTensorIndexCSF(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
         if o != 0:
             x = self._tab.Indirect(o + self._tab.Pos)
-            from .Int import Int
+            from org.apache.arrow.flatbuf.Int import Int
             obj = Int()
             obj.Init(self._tab.Bytes, x)
             return obj
@@ -80,7 +82,7 @@ class SparseTensorIndexCSF(object):
         if o != 0:
             x = self._tab.Vector(o)
             x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 16
-            from .Buffer import Buffer
+            from org.apache.arrow.flatbuf.Buffer import Buffer
             obj = Buffer()
             obj.Init(self._tab.Bytes, x)
             return obj
@@ -93,13 +95,18 @@ class SparseTensorIndexCSF(object):
             return self._tab.VectorLen(o)
         return 0
 
+    # SparseTensorIndexCSF
+    def IndptrBuffersIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        return o == 0
+
     # The type of values in indicesBuffers
     # SparseTensorIndexCSF
     def IndicesType(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         if o != 0:
             x = self._tab.Indirect(o + self._tab.Pos)
-            from .Int import Int
+            from org.apache.arrow.flatbuf.Int import Int
             obj = Int()
             obj.Init(self._tab.Bytes, x)
             return obj
@@ -122,7 +129,7 @@ class SparseTensorIndexCSF(object):
         if o != 0:
             x = self._tab.Vector(o)
             x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 16
-            from .Buffer import Buffer
+            from org.apache.arrow.flatbuf.Buffer import Buffer
             obj = Buffer()
             obj.Init(self._tab.Bytes, x)
             return obj
@@ -134,6 +141,11 @@ class SparseTensorIndexCSF(object):
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
+
+    # SparseTensorIndexCSF
+    def IndicesBuffersIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        return o == 0
 
     # axisOrder stores the sequence in which dimensions were traversed to
     # produce the prefix tree.
@@ -162,6 +174,11 @@ class SparseTensorIndexCSF(object):
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
+
+    # SparseTensorIndexCSF
+    def AxisOrderIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        return o == 0
 
 def SparseTensorIndexCSFStart(builder): builder.StartObject(5)
 def SparseTensorIndexCSFAddIndptrType(builder, indptrType): builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(indptrType), 0)

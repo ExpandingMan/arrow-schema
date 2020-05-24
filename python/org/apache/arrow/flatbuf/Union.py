@@ -3,6 +3,8 @@
 # namespace: flatbuf
 
 import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
 
 # A union is a complex type with children in Field
 # By default ids in the type vector refer to the offsets in the children
@@ -50,6 +52,11 @@ class Union(object):
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
+
+    # Union
+    def TypeIdsIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        return o == 0
 
 def UnionStart(builder): builder.StartObject(2)
 def UnionAddMode(builder, mode): builder.PrependInt16Slot(0, mode, 0)

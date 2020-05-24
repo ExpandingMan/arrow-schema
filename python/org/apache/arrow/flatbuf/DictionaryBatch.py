@@ -3,6 +3,8 @@
 # namespace: flatbuf
 
 import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
 
 # For sending dictionary encoding information. Any Field can be
 # dictionary-encoded, but in this case none of its children may be
@@ -36,7 +38,7 @@ class DictionaryBatch(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
         if o != 0:
             x = self._tab.Indirect(o + self._tab.Pos)
-            from .RecordBatch import RecordBatch
+            from org.apache.arrow.flatbuf.RecordBatch import RecordBatch
             obj = RecordBatch()
             obj.Init(self._tab.Bytes, x)
             return obj

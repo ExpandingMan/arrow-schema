@@ -3,6 +3,8 @@
 # namespace: flatbuf
 
 import flatbuffers
+from flatbuffers.compat import import_numpy
+np = import_numpy()
 
 # A data header describing the shared memory layout of a "record" or "row"
 # batch. Some systems call this a "row batch" internally and others a "record
@@ -37,7 +39,7 @@ class RecordBatch(object):
         if o != 0:
             x = self._tab.Vector(o)
             x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 16
-            from .FieldNode import FieldNode
+            from org.apache.arrow.flatbuf.FieldNode import FieldNode
             obj = FieldNode()
             obj.Init(self._tab.Bytes, x)
             return obj
@@ -49,6 +51,11 @@ class RecordBatch(object):
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
+
+    # RecordBatch
+    def NodesIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        return o == 0
 
     # Buffers correspond to the pre-ordered flattened buffer tree
     #
@@ -62,7 +69,7 @@ class RecordBatch(object):
         if o != 0:
             x = self._tab.Vector(o)
             x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 16
-            from .Buffer import Buffer
+            from org.apache.arrow.flatbuf.Buffer import Buffer
             obj = Buffer()
             obj.Init(self._tab.Bytes, x)
             return obj
@@ -75,13 +82,18 @@ class RecordBatch(object):
             return self._tab.VectorLen(o)
         return 0
 
+    # RecordBatch
+    def BuffersIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        return o == 0
+
     # Optional compression of the message body
     # RecordBatch
     def Compression(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
         if o != 0:
             x = self._tab.Indirect(o + self._tab.Pos)
-            from .BodyCompression import BodyCompression
+            from org.apache.arrow.flatbuf.BodyCompression import BodyCompression
             obj = BodyCompression()
             obj.Init(self._tab.Bytes, x)
             return obj
